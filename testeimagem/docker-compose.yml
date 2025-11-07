@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: sma-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_db_data:/data/db
+      - mongo_config_data:/data/configdb
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-America/Sao_Paulo}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=host.docker.internal
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=sma_db
+      - DB_POSTGRESDB_USER=sma_user
+      - DB_POSTGRESDB_PASSWORD=senhaforte123
+    volumes:
+      - ${USERPROFILE}\.n8n:/home/node/.n8n
+
+volumes:
+  mongo_db_data:
+    external: true
+    name: dd1629e1a8707e92c4167766f18b99dca03cde90c67f00b750d60b216c87b2b5
+  mongo_config_data:
+    external: true
+    name: 02cedafe74fb13b5ea0cf6b62237ce22c55edd08cc2de26845f3bb6bc6b5902c

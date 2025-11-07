@@ -1,0 +1,19 @@
+CREATE TABLE dispositivos (
+    id SERIAL PRIMARY KEY,
+    integration_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    location TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE eventos (
+    id SERIAL PRIMARY KEY,
+    integration_id TEXT NOT NULL,
+    payload JSONB NOT NULL,
+    is_alarm BOOLEAN NOT NULL,
+    ia_categoria TEXT,
+    ia_urgencia TEXT,
+    ia_acao_recomendada TEXT,
+    ia_resumo_gestor TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
