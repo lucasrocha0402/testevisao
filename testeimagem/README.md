@@ -48,3 +48,28 @@ Quando um novo dispositivo é criado na sua plataforma, sua API deve registrá-l
   "location": "Rack 03, Prateleira 01",
   "callbackUrl": "https://localhost:7001/api/events" // URL COMPLETA do endpoint da SUA API que receberá os eventos.
 }
+```
+
+## 6. Relatório de Alertas (Fluxo Bônus)
+
+Este repositório já inclui os arquivos necessários para suportar o desafio bônus no n8n.
+
+1. **Volumes do n8n** – `docker-compose.yml` monta `./scripts` e `./output` em `/workspace/scripts` e `/workspace/output`. No nó *Execute Command*, utilize:
+   ```
+   python /workspace/scripts/gerar_relatorio.py
+   ```
+
+2. **Dependências Python** – instale-as no container, se necessário:
+   ```
+   pip install psycopg2-binary reportlab
+   ```
+
+3. **Script `gerar_relatorio.py`** – conecta-se ao Postgres, coleta até 100 registros da tabela `events` e gera `/workspace/output/relatorio_alertas.pdf`.
+
+4. **Workflow `GET /webhook/report`** – crie um fluxo com:
+   - Webhook (GET)
+   - Execute Command (executa o script)
+   - Read Binary File (lê o PDF)
+   - Respond to Webhook (retorna o binário para download)
+
+Assim, acessar `http://localhost:5678/webhook/report` executa o script e devolve o PDF imediatamente.
